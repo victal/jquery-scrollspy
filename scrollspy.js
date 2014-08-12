@@ -17,7 +17,7 @@
 	var elementsInView = [];
 	var isSpying = false;
 	var ticks = 0;
-	var offset = {
+	var offsets = {
 		top : 0,
 		right : 0,
 		bottom : 0,
@@ -35,15 +35,23 @@
 	function findElements(top, right, bottom, left) {
 		var hits = $();
 		$.each(elements, function(i, element) {
+      var offset = offsets;
+      if(offsets instanceof Array){
+        offset = offsets[i];
+      }
 			var elTop = element.offset().top,
 				elLeft = element.offset().left,
 				elRight = elLeft + element.width(),
-				elBottom = elTop + element.height();
+				elBottom = elTop + element.height(),
+        realtop = top + offset.top,
+        realbottom = bottom + offset.bottom,
+        realleft = left + offset.left,
+        realright = right + offset.right;
 
-			var isIntersect = !(elLeft > right ||
-				elRight < left ||
-				elTop > bottom ||
-				elBottom < top);
+      var isIntersect = !(elLeft > realright ||
+        elRight < realleft ||
+        elTop > realbottom ||
+        elBottom < realtop);
 
 			if (isIntersect) {
 				hits.push(element);
@@ -67,7 +75,7 @@
 			bottom = top + jWindow.height();
 
 		// determine which elements are in view
-		var intersections = findElements(top+offset.top, right+offset.right, bottom+offset.bottom, left+offset.left);
+		var intersections = findElements(top, right, bottom, left);
 		$.each(intersections, function(i, element) {
 			var lastTick = element.data('scrollSpy:ticks');
 			if (typeof lastTick != 'number') {
@@ -172,10 +180,13 @@
 			throttle: 100
 		};
 
-		offset.top = options.offsetTop || 0;
-		offset.right = options.offsetRight || 0;
-		offset.bottom = options.offsetBottom || 0;
-		offset.left = options.offsetLeft || 0;
+    var defaultOffset = {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    };
+    offsets = options.offsets || defaultOffset;
 
 		var throttledScroll = throttle(onScroll, options.throttle || 100);
 		var readyScroll = function(){
