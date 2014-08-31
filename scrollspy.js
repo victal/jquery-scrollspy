@@ -186,7 +186,7 @@
       bottom: 0,
       left: 0,
     };
-    offsets = options.offsets || defaultOffset;
+    offsets = options.offset || defaultOffset;
 
 		var throttledScroll = throttle(onScroll, options.throttle || 100);
 		var readyScroll = function(){
