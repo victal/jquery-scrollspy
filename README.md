@@ -6,6 +6,7 @@ A jQuery plugin for detecting enter/exit of elements in the viewport when the us
 
 Added a couple new features:
 
+ * Ago 2014 - Window offset array, allows things like aligning content and nav items
  * May 2014 - optional window offset, allows for things like floating navs
  * Feb 2014 - supports window resize
  * Nov 2013 - throttles scrollspy events so that event handles only fire every 100 milliseconds
